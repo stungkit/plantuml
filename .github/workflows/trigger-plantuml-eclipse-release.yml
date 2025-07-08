@@ -8,16 +8,26 @@ on:
   workflow_call:
 
   # run this on release event
-  # Dummy commit
   release:
     # We might switch to 'released' if we only want non-SNAPSHOT releases to trigger the workflow
     # see https://docs.github.com/en/actions/reference/events-that-trigger-workflows#release
     types: [published]
 
+permissions:
+  contents: write
+
 jobs:
   trigger-workflow:
     runs-on: ubuntu-latest
     steps:
+      - name: Check if secret is available
+        run: |
+          if [ -z "${{ secrets.PLANTUML_ECLIPSE_DISPATCH_TOKEN }}" ]; then
+            echo "Secret is missing"
+            exit 1
+          else
+            echo "Secret is available"
+          fi
       - name: Trigger release workflow in plantuml-eclipse repo
         # see https://github.com/peter-evans/repository-dispatch
         uses: peter-evans/repository-dispatch@v3
