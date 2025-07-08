@@ -6,6 +6,9 @@ on:
 
   # call this from another workflow_call:
   workflow_call:
+    secrets:
+      PLANTUML_ECLIPSE_DISPATCH_TOKEN:
+        required: true
 
   # run this on release event
   release:
